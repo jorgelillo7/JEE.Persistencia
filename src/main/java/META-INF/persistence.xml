@@ -17,6 +17,10 @@
 		<class>es.art83.persistence.jpa.User7</class>
 		<class>es.art83.persistence.jpa.User8</class>
 		<class>es.art83.persistence.jpa.Vehicle2</class>
+		<class>es.art83.persistence.jpa.TestCategory</class>
+        <class>es.art83.persistence.jpa.TestUser</class>
+        <class>es.art83.persistence.jpa.TestPhone</class>
+        <class>es.art83.persistence.jpa.TestBoat</class>
 		<class>es.art83.persistence.jpa.inheritance.C1</class>
 		<class>es.art83.persistence.jpa.inheritance.C1A</class>
 		<class>es.art83.persistence.jpa.inheritance.C1B</class>

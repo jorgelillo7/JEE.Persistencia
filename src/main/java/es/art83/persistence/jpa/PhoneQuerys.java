@@ -121,6 +121,20 @@ public class PhoneQuerys {
     private List<PhoneType> findJpql1() {
         return (List<PhoneType>) entityManager.createQuery(JPQL1).getResultList();
     }
+    
+    private List<Phone2> findJPQL1Criteria() {
+        CriteriaBuilder criteria = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Phone2> query = criteria.createQuery(Phone2.class);
+        Root<Phone2> rootPhone = query.from(Phone2.class);
+        query.select(rootPhone.get("number"));
+        Predicate p1 = criteria.gt(rootPhone.get("id").as(Integer.class), 3);
+        Predicate p2 = criteria.isNotNull(rootPhone.get("phoneType"));
+        Predicate predicate = criteria.and(p1, p2);
+        query.where(predicate);
+        TypedQuery<Phone2> phoneQuery = entityManager.createQuery(query);
+        return phoneQuery.getResultList(); // Se buscan todos
+    }
+    
 
     private static final String JPQL2 = "SELECT p.id FROM Phone2 p WHERE p.number > 111";
 
@@ -129,6 +143,18 @@ public class PhoneQuerys {
         return (List<Integer>) entityManager.createQuery(JPQL2).getResultList();
     }
 
+    private List<Phone2> findJPQL2Criteria() {
+        CriteriaBuilder criteria = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Phone2> query = criteria.createQuery(Phone2.class);
+        Root<Phone2> rootPhone = query.from(Phone2.class);
+        query.select(rootPhone.get("id"));
+        Predicate p1 = criteria.gt(rootPhone.get("number").as(Integer.class), 111);
+        Predicate predicate = criteria.and(p1);
+        query.where(predicate);
+        TypedQuery<Phone2> phoneQuery = entityManager.createQuery(query);
+        return phoneQuery.getResultList(); // Se buscan todos
+    }
+    
     private static final String JPQL3 = "SELECT p FROM Phone2 p WHERE p.phoneType = :type AND p.number < 200 ORDER BY p.number";
 
     @SuppressWarnings("unchecked")
@@ -138,10 +164,27 @@ public class PhoneQuerys {
         return (List<Phone2>) query.getResultList();
     }
 
+    
+
+    private List<Phone2> findJPQL3Criteria() {
+        CriteriaBuilder criteria = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Phone2> query = criteria.createQuery(Phone2.class);
+        Root<Phone2> rootPhone = query.from(Phone2.class);
+
+        Predicate p1 = criteria.equal(rootPhone.get("phoneType").as(PhoneType.class), PhoneType.WORK);
+        Predicate p2 = criteria.lt(rootPhone.get("number").as(Integer.class), 200);
+        Predicate predicate = criteria.and(p1,p2);
+        query.where(predicate);
+        query.orderBy(criteria.asc(rootPhone.get("number")));
+        TypedQuery<Phone2> phoneQuery = entityManager.createQuery(query);
+        return phoneQuery.getResultList(); // Se buscan todos
+    }
+    
+    
     public static void main(String[] args) {
         PhoneQuerys criteriaPhone = new PhoneQuerys();
 
-        System.out.println("numberOfPhonesJpql: " + criteriaPhone.numberOfPhonesJpql());
+    /*    System.out.println("numberOfPhonesJpql: " + criteriaPhone.numberOfPhonesJpql());
         System.out.println("numberOfPhonesCriteria: " + criteriaPhone.numberOfPhonescriteria());
 
         System.out.println("findAllPhonesJpql: " + criteriaPhone.findAllPhonesJpql());
@@ -152,11 +195,17 @@ public class PhoneQuerys {
 
         System.out.println("findPhoneTypesDistinct: " + criteriaPhone.findPhoneTypesDistinctJpql());
         System.out.println("findPhoneTypesDistinct: "
-                + criteriaPhone.findPhoneTypesDistinctCriteria());
+                + criteriaPhone.findPhoneTypesDistinctCriteria());*/
 
         System.out.println("findJpql1: " + criteriaPhone.findJpql1());
+        System.out.println("findJpql1Criteria: " + criteriaPhone.findJPQL1Criteria());
+     
         System.out.println("findJpql2: " + criteriaPhone.findJpql2());
+        System.out.println("findJpql2Criteria: " + criteriaPhone.findJPQL2Criteria());
+        
         System.out.println("findJpql3: " + criteriaPhone.findJpql3());
+        System.out.println("findJPQL3Criteria: " + criteriaPhone.findJPQL3Criteria());
+        
     }
 
 }
